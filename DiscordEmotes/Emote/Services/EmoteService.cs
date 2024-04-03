@@ -1,5 +1,5 @@
 using DiscordEmotes.Blabla;
-using DiscordEmotes.Image;
+using DiscordEmotes.Emote.Clients;
 using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Logging;
 
@@ -7,27 +7,28 @@ namespace DiscordEmotes.Emote.Services;
 
 public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient, ImageService imageService)
 {
-    public async Task<Models.Emote> GetEmote(string emoteId)
+    public async Task<Models.Emote> GetById(string id)
     {
-        var emoteResponse = await emoteClient.GetEmoteById(emoteId);
-        
-        var emotes = Models.Emote.FromEmoteResponse(emoteResponse);
+        var emoteResponse = await emoteClient.GetById(id);
 
-        // Prioritize gif over png.
-        foreach (var emote in emotes.OrderBy(o => o.Extension))
+        return Models.Emote
+            .FromEmoteResponse(emoteResponse);
+    }
+
+    public async Task<IEnumerable<Models.Emote>> GetByQuery(string query)
+    {
+        var emoteSearchResponse = await emoteClient.GetByQuery(query);
+
+        // get ids
+        var emoteIds = emoteSearchResponse.Data.Emotes.Items.Select(s => s.Id);
+
+        var emotes = new List<Models.Emote>();
+        foreach (var id in emoteIds)
         {
-            var image = await imageService.GetImageFromEmote(emote);
-
-            if (image is null)
-            {
-                logger.LogWarning("Could not find a emote for extension {Extension}.", emote.Extension);
-                continue;
-            }
-            
-            await Persistence.SaveEmote(emote, image);
-            return emote;
+            var emoteResponse = await emoteClient.GetById(id);
+            emotes.Add(Models.Emote.FromEmoteResponse(emoteResponse));
         }
 
-        throw new Exception($"No emotes found with valid extensions.");
+        return emotes;
     }
 }

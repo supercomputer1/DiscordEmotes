@@ -49,18 +49,32 @@ internal static class Persistence
         Log.Information("Saved emote {0} to {1}.", emote.FileId, path);
     }
 
+    /// <summary>
+    /// Get the file path of an emote.
+    /// </summary>
+    /// <param name="emote"></param>
+    /// <returns></returns>
     public static async Task<string> GetEmote(Emote.Models.Emote emote)
     {
         var path = await Task.Run(() => Path.Combine(EmoteDir, emote.FileId));
         return path;
+    }
 
+    /// <summary>
+    /// Get the file stream of an emote.
+    /// </summary>
+    /// <param name="emote"></param>
+    /// <returns></returns>
+    public static async Task<Stream> GetEmoteStream(Emote.Models.Emote emote)
+    {
+        var path = await Task.Run(() => Path.Combine(EmoteDir, emote.FileId));
+        return File.OpenRead(path);
     }
 
     /// <summary>
     /// Delete emote from disk.
     /// </summary>
     /// <param name="emote"></param>
-    /// <exception cref="NotImplementedException"></exception>
     public static async Task RemoveEmote(Emote.Models.Emote emote)
     {
         var path = Path.Combine(EmoteDir, emote.FileId);

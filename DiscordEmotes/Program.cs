@@ -1,8 +1,9 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
+using DiscordEmotes;
 using DiscordEmotes.Blabla;
 using DiscordEmotes.Discord.Services;
-using DiscordEmotes.Emote;
+using DiscordEmotes.Emote.Clients;
 using DiscordEmotes.Emote.Services;
 using DiscordEmotes.Image;
 using DiscordEmotes.Image.Services;
@@ -36,6 +37,7 @@ using var host = Host.CreateDefaultBuilder(args)
         
         services.AddSingleton<ImageService>(); 
         services.AddSingleton<EmoteService>(); 
+        services.AddSingleton<SomeKindOfService>(); 
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<InteractionService>();
         services.AddHostedService<InteractionHandlingService>(); 
