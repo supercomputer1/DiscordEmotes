@@ -26,11 +26,9 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
     {
         var queries = new Dictionary<string, string>
         {
-            ["all"] =
-                "query SearchEmotes($query: String!, $page: Int, $sort: Sort, $limit: Int, $filter: EmoteSearchFilter) {\n emotes(query: $query, page: $page, sort: $sort, limit: $limit, filter: $filter) {\nitems{\n id\n name\n owner{\n username\n }\n host{\n url}}\n}\n}",
-            ["url"] =
-                "query SearchEmotes($query: String!, $page: Int, $sort: Sort, $limit: Int, $filter: EmoteSearchFilter) {\n emotes(query: $query, page: $page, sort: $sort, limit: $limit, filter: $filter) {\nitems{host{\n url}}\n}\n}"
+            ["all"] = "query SearchEmotes($query: String!, $page: Int, $sort: Sort, $limit: Int, $filter: EmoteSearchFilter) {\n emotes(query: $query, page: $page, sort: $sort, limit: $limit, filter: $filter) {\nitems{\n id\n name\n owner{\n username\n }\n host{\n url}}\n}\n}"
         };
+        
         var payload = new
         {
             operationName = "SearchEmotes",
@@ -56,12 +54,11 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         };
         
         var jsonPayload = JsonSerializer.Serialize(payload);
-        using var httpClient = new HttpClient();
-        
-        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        //httpClient.BaseAddress = new Uri("https://7tv.io/v3/gql");
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-        var response = await httpClient.PostAsync("https://7tv.io/v3/gql", content);
+
+        var client = httpClientFactory.CreateClient("Emotes");
+        
+        var response = await client.PostAsync(new Uri("gql", UriKind.Relative), content);
         var responseContent = await response.Content.ReadAsStreamAsync();
         return responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
     }
