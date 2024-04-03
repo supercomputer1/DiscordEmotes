@@ -1,5 +1,6 @@
 using System.Text.Json;
 using DiscordEmotes.Emote.Extensions;
+using DiscordEmotes.Emote.Models;
 
 namespace DiscordEmotes.Emote;
 
@@ -17,7 +18,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
 
         if (!emote.IsSuccessStatusCode)
         {
-            throw new HttpRequestException("Invalid request.");
+            throw new HttpRequestException($"Emote {emoteId} was not found.");
         }
 
         var stream = await emote.Content.ReadAsStreamAsync();

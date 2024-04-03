@@ -5,6 +5,7 @@ using DiscordEmotes.Discord.Services;
 using DiscordEmotes.Emote;
 using DiscordEmotes.Emote.Services;
 using DiscordEmotes.Image;
+using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,8 +31,10 @@ using var host = Host.CreateDefaultBuilder(args)
 
         services.AddHttpClient("Images");
         
-        services.AddSingleton<EmoteClient>();
-        services.AddSingleton<ImageClient>();
+        services.AddTransient<EmoteClient>();
+        services.AddTransient<ImageClient>();
+        
+        services.AddSingleton<ImageService>(); 
         services.AddSingleton<EmoteService>(); 
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<InteractionService>();

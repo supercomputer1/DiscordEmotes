@@ -39,7 +39,7 @@ internal static class Persistence
     /// </summary>
     /// <param name="emote"></param>
     /// <param name="emoteImageStream"></param>
-    public static async Task SaveEmote(EmoteTest emote, Stream emoteImageStream)
+    public static async Task SaveEmote(Emote.Models.Emote emote, Stream emoteImageStream)
     {
         var path = Path.Combine(EmoteDir, emote.FileId);
         
@@ -49,7 +49,7 @@ internal static class Persistence
         Log.Information("Saved emote {0} to {1}.", emote.FileId, path);
     }
 
-    public static async Task<string> GetEmote(EmoteTest emote)
+    public static async Task<string> GetEmote(Emote.Models.Emote emote)
     {
         var path = await Task.Run(() => Path.Combine(EmoteDir, emote.FileId));
         return path;
@@ -61,7 +61,7 @@ internal static class Persistence
     /// </summary>
     /// <param name="emote"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public static async Task RemoveEmote(EmoteTest emote)
+    public static async Task RemoveEmote(Emote.Models.Emote emote)
     {
         var path = Path.Combine(EmoteDir, emote.FileId);
 
