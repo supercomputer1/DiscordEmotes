@@ -1,67 +1,53 @@
 using Discord;
 using Discord.Interactions;
+using Discord.Interactions.Builders;
 using DiscordEmotes.Blabla;
-using DiscordEmotes.Emote;
-using DiscordEmotes.Emote.Services;
-
+using Microsoft.Extensions.Logging;
+using Serilog;
+using ModalBuilder = Discord.ModalBuilder;
 
 namespace DiscordEmotes.Discord.Modules;
 
-    public class EmoteModule(SomeKindOfService someKindOfService) : InteractionModuleBase<SocketInteractionContext>
+public class EmoteModule(ILogger<EmoteModule> logger, SomeKindOfService someKindOfService)
+    : InteractionModuleBase<SocketInteractionContext>
+{
+    [SlashCommand("emote", "id")]
+    public async Task Id(string id)
     {
-        [SlashCommand("emote", "id")]
-        public async Task Id(string id)
-        {
-            try
-            {
-                // Acknowledge the user that the request is received.
-                await DeferAsync();
+        await HandleRequest(id, "id");
+    }
 
-                var emote = await someKindOfService.HandleRequest(id, "id"); 
-                    
-                await FollowupWithFileAsync(await Persistence.GetEmote(emote.First()));
-                await Persistence.RemoveEmote(emote.First());
-            }
-            catch
+    [SlashCommand("search", "query")]
+    public async Task Query(string query)
+    {
+        await HandleRequest(query, "query");
+    }
+
+    private async Task HandleRequest(string requestText, string requestType)
+    {
+        try
+        {
+            await DeferAsync();
+            
+            var emotes = await someKindOfService
+                .HandleRequest(requestText, requestType);
+
+            var images = emotes
+                .SelectMany(s => s.Images)
+                .ToList(); 
+            
+            await FollowupWithFilesAsync(images.Select(i => i.ToFileAttachment()));
+            
+            // Save file locally 
+            foreach (var image in images)
             {
-                await FollowupAsync($"Could not find a emote for id {id}.");
+                await Persistence.SaveImage(image);
             }
         }
-
-        [SlashCommand("search", "query")]
-        public async Task Query(string query)
+        catch (Exception ex)
         {
-            try
-            {
-                await DeferAsync();
-
-                var emotes = await someKindOfService
-                    .HandleRequest(query, "query");
-                
-                var fileAttachments = await EmoteToFileAttachment(emotes);
-
-                await FollowupWithFilesAsync(fileAttachments);
-
-                foreach (var emote in emotes)
-                {
-                    await Persistence.RemoveEmote(emote);
-                }
-            }
-            catch
-            {
-                await FollowupAsync($"Could not find a emote for query {query}.");
-            }
-            
-            
-            static async Task<IEnumerable<FileAttachment>> EmoteToFileAttachment(IEnumerable<Emote.Models.Emote> emotes)
-            {
-                var fileAttachments = new List<FileAttachment>(); 
-                foreach (var emote in emotes)
-                {
-                    fileAttachments.Add(new FileAttachment(stream: await Persistence.GetEmoteStream(emote), fileName: emote.FileId));
-                }
-
-                return fileAttachments;
-            }
+            logger.LogError("{Ex}", ex);
+            await FollowupAsync($"Could not find a emote for query {requestText}.");
         }
     }
+}

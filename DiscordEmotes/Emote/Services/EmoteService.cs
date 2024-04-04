@@ -1,5 +1,6 @@
 using DiscordEmotes.Blabla;
 using DiscordEmotes.Emote.Clients;
+using DiscordEmotes.Emote.Models;
 using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Logging;
 
@@ -15,10 +16,17 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient,
             .FromEmoteResponse(emoteResponse);
     }
 
-    public async Task<IEnumerable<Models.Emote>> GetByQuery(string query)
+    public async Task<IEnumerable<Models.Emote>> GetByQuery(string query, int requestLimit = 1)
     {
-        var emoteSearchResponse = await emoteClient.GetByQuery(query);
+        var emoteSearchResponse = await emoteClient.GetByQuery(query, exactMatch: true, requestLimit: requestLimit) ??
+                                  await emoteClient.GetByQuery(query, exactMatch: false, requestLimit: requestLimit);
 
+        if (emoteSearchResponse is null || !emoteSearchResponse.HasResults || emoteSearchResponse.Data.Emotes is null)
+        {
+            logger.LogWarning("Could not find any images for query {Query}.", query);
+            return Array.Empty<Models.Emote>(); 
+        }
+        
         // get ids
         var emoteIds = emoteSearchResponse.Data.Emotes.Items.Select(s => s.Id);
 

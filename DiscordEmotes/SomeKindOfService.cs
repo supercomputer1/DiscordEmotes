@@ -1,6 +1,3 @@
-using System.Collections.ObjectModel;
-using DiscordEmotes.Blabla;
-using DiscordEmotes.Emote.Clients;
 using DiscordEmotes.Emote.Services;
 using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Logging;
@@ -12,9 +9,6 @@ public class SomeKindOfService(
     EmoteService emoteService,
     ImageService imageService)
 {
-    // Prioritize gif over png.
-    private readonly SortedSet<string> _extensions = [".gif", ".png"];
-
     public async Task<IEnumerable<Emote.Models.Emote>> HandleRequest(string query, string requestType)
     {
         var emotes = new List<Emote.Models.Emote>();
@@ -24,43 +18,16 @@ public class SomeKindOfService(
                 emotes.Add(await emoteService.GetById(query));
                 break;
             case "query":
-                emotes.AddRange(await emoteService.GetByQuery(query));
+                emotes.AddRange(await emoteService.GetByQuery(query, requestLimit: 1));
                 break;
         }
 
-        var savedEmotes = new Dictionary<string, Emote.Models.Emote>();
-
         foreach (var emote in emotes)
         {
-            foreach (var extension in _extensions)
-            {
-                if (savedEmotes.ContainsKey(emote.Id))
-                {
-                    logger.LogWarning("Emote {Id} already has a saved image. Skipping.", emote.Id);
-                    continue;
-                }
-                
-                var image = await imageService.GetImageFromEmote(emote, extension);
-
-                if (image is null)
-                {
-                    logger.LogWarning("Could not find a emote for extension {Extension}.", extension);
-                    continue;
-                }
-
-                emote.Extension = extension;
-                await Persistence.SaveEmote(emote, image);
-
-                savedEmotes.Add(emote.Id, emote);
-            }
-
-            if (!savedEmotes.ContainsKey(emote.Id))
-            {
-                logger.LogWarning("Could not find any valid images for emote {Id}.", emote.Id);
-            }
+            var image = await imageService.GetImage(emote.Id);
+            emote.AddImage(image);
         }
 
-        return savedEmotes
-            .Select(e => e.Value);
+        return emotes;
     }
 }

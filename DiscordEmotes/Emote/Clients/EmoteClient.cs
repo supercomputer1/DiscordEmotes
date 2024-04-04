@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using DiscordEmotes.Emote.Extensions;
 using DiscordEmotes.Emote.Models;
+using Serilog;
 
 namespace DiscordEmotes.Emote.Clients;
 
@@ -22,7 +23,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         return stream.DeserializeNotNull<EmoteResponse>(_jsonSerializerOptions);
     }
 
-    public async Task<EmoteSearchResponse> GetByQuery(string query)
+    public async Task<EmoteSearchResponse?> GetByQuery(string query, bool exactMatch, int requestLimit)
     {
         var queries = new Dictionary<string, string>
         {
@@ -35,13 +36,13 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
             variables = new
             {
                 query = query,
-                limit = 1,
+                limit = requestLimit,
                 page = 1,
                 sort = new { value = "popularity", order = "DESCENDING" },
                 filter = new
                 {
                     category = "TOP",
-                    exact_match = false,
+                    exact_match = exactMatch,
                     case_sensitive = false,
                     ignore_tags = false,
                     zero_width = false,
@@ -59,7 +60,13 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         var client = httpClientFactory.CreateClient("Emotes");
         
         var response = await client.PostAsync(new Uri("gql", UriKind.Relative), content);
+        
+        Log.Information(response.StatusCode.ToString());
+        
         var responseContent = await response.Content.ReadAsStreamAsync();
-        return responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
+
+        var emoteSearchResponse = responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
+
+        return emoteSearchResponse.HasResults ? emoteSearchResponse : null;
     }
 }

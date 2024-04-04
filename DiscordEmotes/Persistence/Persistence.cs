@@ -35,18 +35,18 @@ internal static class Persistence
     }
 
     /// <summary>
-    /// Temporarily save emote to disk.
+    /// Save image to disk.
     /// </summary>
-    /// <param name="emote"></param>
-    /// <param name="emoteImageStream"></param>
-    public static async Task SaveEmote(Emote.Models.Emote emote, Stream emoteImageStream)
+    /// <param name="image"></param>
+    public static async Task SaveImage(Image.Models.Image image)
     {
-        var path = Path.Combine(EmoteDir, emote.FileId);
-        
-        await using var outputFileStream = new FileStream(path, FileMode.Create);
-        await emoteImageStream.CopyToAsync(outputFileStream);    
-        
-        Log.Information("Saved emote {0} to {1}.", emote.FileId, path);
+        var path = Path.Combine(EmoteDir, image.FileId);
+
+        var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+        await image.Stream.CopyToAsync(fileStream);
+        await fileStream.DisposeAsync();
+
+        Log.Information("Saved emote {0} to {1}.", image.FileId, path);
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ internal static class Persistence
     /// <returns></returns>
     public static async Task<string> GetEmote(Emote.Models.Emote emote)
     {
-        var path = await Task.Run(() => Path.Combine(EmoteDir, emote.FileId));
+        var path = await Task.Run(() => Path.Combine(EmoteDir, emote.Id));
         return path;
     }
 
@@ -67,7 +67,7 @@ internal static class Persistence
     /// <returns></returns>
     public static async Task<Stream> GetEmoteStream(Emote.Models.Emote emote)
     {
-        var path = await Task.Run(() => Path.Combine(EmoteDir, emote.FileId));
+        var path = await Task.Run(() => Path.Combine(EmoteDir, emote.Id));
         return File.OpenRead(path);
     }
 
@@ -77,10 +77,10 @@ internal static class Persistence
     /// <param name="emote"></param>
     public static async Task RemoveEmote(Emote.Models.Emote emote)
     {
-        var path = Path.Combine(EmoteDir, emote.FileId);
+        var path = Path.Combine(EmoteDir, emote.Id);
 
         await Task.Run(() => File.Delete(path));
-        
-        Log.Information("Removed emote {0} from {1}.", emote.FileId, path);
+
+        Log.Information("Removed emote {0} from {1}.", emote.Id, path);
     }
 }

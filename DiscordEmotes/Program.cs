@@ -5,7 +5,7 @@ using DiscordEmotes.Blabla;
 using DiscordEmotes.Discord.Services;
 using DiscordEmotes.Emote.Clients;
 using DiscordEmotes.Emote.Services;
-using DiscordEmotes.Image;
+using DiscordEmotes.Image.Clients;
 using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

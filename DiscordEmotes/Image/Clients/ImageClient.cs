@@ -1,4 +1,4 @@
-namespace DiscordEmotes.Image;
+namespace DiscordEmotes.Image.Clients;
 
 public class ImageClient(IHttpClientFactory httpClientFactory)
 {
