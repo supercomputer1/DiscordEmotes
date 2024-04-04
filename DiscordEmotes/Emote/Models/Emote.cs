@@ -2,7 +2,7 @@ namespace DiscordEmotes.Emote.Models;
 
 public class Emote
 {
-    private Emote(string id, string name)
+    public Emote(string id, string name)
     {
         Id = id;
         Name = name; 

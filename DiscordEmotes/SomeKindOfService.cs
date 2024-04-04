@@ -20,9 +20,13 @@ public class SomeKindOfService(
             case "query":
                 emotes.AddRange(await emoteService.GetByQuery(query, requestLimit: 1));
                 break;
+            case "set": 
+                emotes.AddRange(await emoteService.GetBySetId(query));
+                break;
         }
 
-        foreach (var emote in emotes)
+        // Discord has a limit of max 10 files per message.
+        foreach (var emote in emotes.Take(10))
         {
             var image = await imageService.GetImage(emote.Id);
             emote.AddImage(image);

@@ -16,6 +16,15 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient,
             .FromEmoteResponse(emoteResponse);
     }
 
+    public async Task<IEnumerable<Models.Emote>> GetBySetId(string id)
+    {
+        var emoteSetResponse = await emoteClient.GetBySetId(id);
+
+        return emoteSetResponse.Emotes
+            .Select(emote => new Models.Emote(emote.Id, emote.Name))
+            .ToList();
+    }
+
     public async Task<IEnumerable<Models.Emote>> GetByQuery(string query, int requestLimit = 1)
     {
         var emoteSearchResponse = await emoteClient.GetByQuery(query, exactMatch: true, requestLimit: requestLimit) ??
@@ -27,16 +36,9 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient,
             return Array.Empty<Models.Emote>(); 
         }
         
-        // get ids
-        var emoteIds = emoteSearchResponse.Data.Emotes.Items.Select(s => s.Id);
-
-        var emotes = new List<Models.Emote>();
-        foreach (var id in emoteIds)
-        {
-            var emoteResponse = await emoteClient.GetById(id);
-            emotes.Add(Models.Emote.FromEmoteResponse(emoteResponse));
-        }
-
-        return emotes;
+        // get emotes
+        return emoteSearchResponse.Data.Emotes.Items
+            .Select(s => new Models.Emote(s.Id, s.Name))
+            .ToList(); 
     }
 }

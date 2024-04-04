@@ -1,3 +1,4 @@
+using System.Text;
 using Discord;
 using Discord.Interactions;
 using Discord.Interactions.Builders;
@@ -23,26 +24,26 @@ public class EmoteModule(ILogger<EmoteModule> logger, SomeKindOfService someKind
         await HandleRequest(query, "query");
     }
 
+    [SlashCommand("set", "id")]
+    public async Task Set(string id)
+    {
+        await HandleRequest(id, "set");
+    }
+
     private async Task HandleRequest(string requestText, string requestType)
     {
         try
         {
             await DeferAsync();
-            
+
             var emotes = await someKindOfService
                 .HandleRequest(requestText, requestType);
 
             var images = emotes
                 .SelectMany(s => s.Images)
-                .ToList(); 
-            
+                .ToList();
+
             await FollowupWithFilesAsync(images.Select(i => i.ToFileAttachment()));
-            
-            // Save file locally 
-            foreach (var image in images)
-            {
-                await Persistence.SaveImage(image);
-            }
         }
         catch (Exception ex)
         {

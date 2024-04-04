@@ -23,6 +23,20 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         return stream.DeserializeNotNull<EmoteResponse>(_jsonSerializerOptions);
     }
 
+    public async Task<EmoteSetResponse> GetBySetId(string id)
+    {
+        var client = httpClientFactory.CreateClient("Emotes");
+        var emote = await client.GetAsync($"emote-sets/{id}");
+        if (!emote.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"Emote-Set {id} was not found.");
+        }
+
+        var test = await emote.Content.ReadAsStringAsync();
+        var stream = await emote.Content.ReadAsStreamAsync();
+        return stream.DeserializeNotNull<EmoteSetResponse>(_jsonSerializerOptions);
+    }
+
     public async Task<EmoteSearchResponse?> GetByQuery(string query, bool exactMatch, int requestLimit)
     {
         var queries = new Dictionary<string, string>
