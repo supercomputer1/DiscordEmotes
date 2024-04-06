@@ -5,6 +5,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PublishSingleFile>true</PublishSingleFile>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <ApplicationIcon>..\\icons\\yamata.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,7 +26,9 @@
     <ItemGroup>
       <None Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
     </ItemGroup>
+    
 
 </Project>

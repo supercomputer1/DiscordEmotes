@@ -5,7 +5,7 @@ namespace DiscordEmotes.Image.Services;
 public class ImageService(ImageClient client)
 {
     private const string BaseUri = "https://cdn.7tv.app/emote/";
-    private const string Size = "2x";
+    private const string Size = "4x";
     private readonly SortedSet<string> _extensions = [".gif", ".png"];
 
     public async Task<Models.Image> GetImage(string id)

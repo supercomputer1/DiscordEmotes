@@ -9,7 +9,7 @@ using ModalBuilder = Discord.ModalBuilder;
 
 namespace DiscordEmotes.Discord.Modules;
 
-public class EmoteModule(ILogger<EmoteModule> logger, SomeKindOfService someKindOfService)
+public class EmoteModule(ILogger<EmoteModule> logger, RequestService requestService)
     : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("emote", "id")]
@@ -36,7 +36,7 @@ public class EmoteModule(ILogger<EmoteModule> logger, SomeKindOfService someKind
         {
             await DeferAsync();
 
-            var emotes = await someKindOfService
+            var emotes = await requestService
                 .HandleRequest(requestText, requestType);
 
             var images = emotes

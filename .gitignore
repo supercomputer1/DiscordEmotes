@@ -488,3 +488,6 @@ $RECYCLE.BIN/
 
 # Configuration 
 appsettings.json
+
+# Deploy 
+deploy.bat

@@ -37,7 +37,7 @@ using var host = Host.CreateDefaultBuilder(args)
         
         services.AddSingleton<ImageService>(); 
         services.AddSingleton<EmoteService>(); 
-        services.AddSingleton<SomeKindOfService>(); 
+        services.AddSingleton<RequestService>(); 
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<InteractionService>();
         services.AddHostedService<InteractionHandlingService>(); 

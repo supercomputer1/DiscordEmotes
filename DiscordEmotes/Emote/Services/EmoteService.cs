@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DiscordEmotes.Emote.Services;
 
-public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient, ImageService imageService)
+public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
 {
     public async Task<Models.Emote> GetById(string id)
     {

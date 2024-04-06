@@ -1,13 +1,9 @@
 using DiscordEmotes.Emote.Services;
 using DiscordEmotes.Image.Services;
-using Microsoft.Extensions.Logging;
 
 namespace DiscordEmotes;
 
-public class SomeKindOfService(
-    ILogger<SomeKindOfService> logger,
-    EmoteService emoteService,
-    ImageService imageService)
+public class RequestService(EmoteService emoteService, ImageService imageService)
 {
     public async Task<IEnumerable<Emote.Models.Emote>> HandleRequest(string query, string requestType)
     {
