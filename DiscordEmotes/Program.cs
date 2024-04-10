@@ -18,7 +18,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration(config =>
     {
-        config.SetBasePath(Directory.GetCurrentDirectory());
+        config.SetBasePath(Persistence.DataDir);
         config.AddJsonFile("appsettings.json", optional: false);
         config.AddCommandLine(args);
     })

@@ -7,7 +7,7 @@ internal static class Persistence
 {
     private const string AppName = "DiscordEmotes";
 
-    private static readonly string DataDir =
+    internal static readonly string DataDir =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);
 
     private static readonly string EmoteDir =

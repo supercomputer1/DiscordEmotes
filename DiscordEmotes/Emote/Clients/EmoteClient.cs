@@ -32,7 +32,6 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
             throw new HttpRequestException($"Emote-Set {id} was not found.");
         }
 
-        var test = await emote.Content.ReadAsStringAsync();
         var stream = await emote.Content.ReadAsStreamAsync();
         return stream.DeserializeNotNull<EmoteSetResponse>(_jsonSerializerOptions);
     }
@@ -43,7 +42,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         {
             ["all"] = "query SearchEmotes($query: String!, $page: Int, $sort: Sort, $limit: Int, $filter: EmoteSearchFilter) {\n emotes(query: $query, page: $page, sort: $sort, limit: $limit, filter: $filter) {\nitems{\n id\n name\n owner{\n username\n }\n host{\n url}}\n}\n}"
         };
-        
+
         var payload = new
         {
             operationName = "SearchEmotes",
@@ -64,19 +63,19 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
                     aspect_ratio = ""
                 }
             },
-                
+
             query = queries["all"]
         };
-        
+
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
         var client = httpClientFactory.CreateClient("Emotes");
-        
+
         var response = await client.PostAsync(new Uri("gql", UriKind.Relative), content);
-        
+
         Log.Information(response.StatusCode.ToString());
-        
+
         var responseContent = await response.Content.ReadAsStreamAsync();
 
         var emoteSearchResponse = responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
