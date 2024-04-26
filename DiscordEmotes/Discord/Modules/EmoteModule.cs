@@ -1,11 +1,5 @@
-using System.Text;
-using Discord;
 using Discord.Interactions;
-using Discord.Interactions.Builders;
-using DiscordEmotes.Blabla;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using ModalBuilder = Discord.ModalBuilder;
 
 namespace DiscordEmotes.Discord.Modules;
 

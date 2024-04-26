@@ -1,7 +1,6 @@
-using DiscordEmotes.Emote;
 using Serilog;
 
-namespace DiscordEmotes.Blabla;
+namespace DiscordEmotes.Common;
 
 internal static class Persistence
 {

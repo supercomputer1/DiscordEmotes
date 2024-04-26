@@ -19,7 +19,6 @@
   <ItemGroup>
     <Folder Include="Common\" />
     <Folder Include="Common\Extensions\" />
-    <Folder Include="Persistence\" />
   </ItemGroup>
 
   <ItemGroup>

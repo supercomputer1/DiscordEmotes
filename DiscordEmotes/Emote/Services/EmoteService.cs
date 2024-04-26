@@ -1,7 +1,4 @@
-using DiscordEmotes.Blabla;
 using DiscordEmotes.Emote.Clients;
-using DiscordEmotes.Emote.Models;
-using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Logging;
 
 namespace DiscordEmotes.Emote.Services;

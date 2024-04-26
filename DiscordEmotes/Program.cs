@@ -1,7 +1,7 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
 using DiscordEmotes;
-using DiscordEmotes.Blabla;
+using DiscordEmotes.Common;
 using DiscordEmotes.Common.Extensions;
 using DiscordEmotes.Discord.Services;
 using DiscordEmotes.Emote.Clients;
