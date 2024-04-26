@@ -1,39 +1,36 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <PublishSingleFile>true</PublishSingleFile>
-        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-        <DebugType>embedded</DebugType>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-        <ApplicationIcon>..\\icons\\yamata.ico</ApplicationIcon>
-    </PropertyGroup>
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Folder Include="Persistence\" />
-    </ItemGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\\icons\\yamata.ico</ApplicationIcon>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Discord.Net" Version="3.10.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-      <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Persistence\" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-      </None>
-    </ItemGroup>
-    
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="3.14.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
 </Project>

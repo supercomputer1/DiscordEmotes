@@ -27,6 +27,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
     {
         var client = httpClientFactory.CreateClient("Emotes");
         var emote = await client.GetAsync($"emote-sets/{id}");
+
         if (!emote.IsSuccessStatusCode)
         {
             throw new HttpRequestException($"Emote-Set {id} was not found.");
@@ -38,6 +39,24 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
 
     public async Task<EmoteSearchResponse?> GetByQuery(string query, bool exactMatch, int requestLimit)
     {
+        var client = httpClientFactory.CreateClient("Emotes");
+
+        var payload = CreatePayload(query, exactMatch, requestLimit);
+        var response = await client.PostAsync(new Uri("gql", UriKind.Relative), payload);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return null;
+        }
+
+        var responseContent = await response.Content.ReadAsStreamAsync();
+        var emoteSearchResponse = responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
+
+        return emoteSearchResponse.HasResults ? emoteSearchResponse : null;
+    }
+
+    private static StringContent CreatePayload(string query, bool exactMatch, int requestLimit)
+    {
         var queries = new Dictionary<string, string>
         {
             ["all"] = "query SearchEmotes($query: String!, $page: Int, $sort: Sort, $limit: Int, $filter: EmoteSearchFilter) {\n emotes(query: $query, page: $page, sort: $sort, limit: $limit, filter: $filter) {\nitems{\n id\n name\n owner{\n username\n }\n host{\n url}}\n}\n}"
@@ -48,7 +67,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
             operationName = "SearchEmotes",
             variables = new
             {
-                query = query,
+                query,
                 limit = requestLimit,
                 page = 1,
                 sort = new { value = "popularity", order = "DESCENDING" },
@@ -67,19 +86,6 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
             query = queries["all"]
         };
 
-        var jsonPayload = JsonSerializer.Serialize(payload);
-        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
-        var client = httpClientFactory.CreateClient("Emotes");
-
-        var response = await client.PostAsync(new Uri("gql", UriKind.Relative), content);
-
-        Log.Information(response.StatusCode.ToString());
-
-        var responseContent = await response.Content.ReadAsStreamAsync();
-
-        var emoteSearchResponse = responseContent.DeserializeNotNull<EmoteSearchResponse>(_jsonSerializerOptions);
-
-        return emoteSearchResponse.HasResults ? emoteSearchResponse : null;
+        return new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
     }
 }
