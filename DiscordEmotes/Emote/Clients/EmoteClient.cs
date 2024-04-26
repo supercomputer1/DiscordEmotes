@@ -2,17 +2,17 @@ using System.Text;
 using System.Text.Json;
 using DiscordEmotes.Emote.Extensions;
 using DiscordEmotes.Emote.Models;
-using Serilog;
 
 namespace DiscordEmotes.Emote.Clients;
 
 public class EmoteClient(IHttpClientFactory httpClientFactory)
 {
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+    private const string EmoteClientName = "Emotes";
 
     public async Task<EmoteResponse> GetById(string emoteId)
     {
-        var client = httpClientFactory.CreateClient("Emotes");
+        var client = httpClientFactory.CreateClient(EmoteClientName);
         var emote = await client.GetAsync($"emotes/{emoteId}");
         if (!emote.IsSuccessStatusCode)
         {
@@ -25,7 +25,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
 
     public async Task<EmoteSetResponse> GetBySetId(string id)
     {
-        var client = httpClientFactory.CreateClient("Emotes");
+        var client = httpClientFactory.CreateClient(EmoteClientName);
         var emote = await client.GetAsync($"emote-sets/{id}");
 
         if (!emote.IsSuccessStatusCode)
@@ -39,7 +39,7 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
 
     public async Task<EmoteSearchResponse?> GetByQuery(string query, bool exactMatch, int requestLimit)
     {
-        var client = httpClientFactory.CreateClient("Emotes");
+        var client = httpClientFactory.CreateClient(EmoteClientName);
 
         var payload = CreatePayload(query, exactMatch, requestLimit);
         var response = await client.PostAsync(new Uri("gql", UriKind.Relative), payload);

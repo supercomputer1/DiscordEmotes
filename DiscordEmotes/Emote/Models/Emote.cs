@@ -1,15 +1,9 @@
 namespace DiscordEmotes.Emote.Models;
 
-public class Emote
+public class Emote(string id, string name)
 {
-    public Emote(string id, string name)
-    {
-        Id = id;
-        Name = name; 
-    }
-    
-    public string Id { get; init; }
-    public string Name { get; init; }
+    public string Id { get; init; } = id;
+    public string Name { get; init; } = name;
 
     public List<Image.Models.Image> Images = [];
 

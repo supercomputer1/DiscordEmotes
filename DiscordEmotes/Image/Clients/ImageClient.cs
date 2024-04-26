@@ -2,9 +2,10 @@ namespace DiscordEmotes.Image.Clients;
 
 public class ImageClient(IHttpClientFactory httpClientFactory)
 {
+    private const string ImageClientName = "Images";
     public async Task<Stream?> GetImage(string url)
     {
-        var client = httpClientFactory.CreateClient("Images");
+        var client = httpClientFactory.CreateClient(ImageClientName);
 
         try
         {

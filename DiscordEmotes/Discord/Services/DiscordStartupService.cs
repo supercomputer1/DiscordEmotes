@@ -1,5 +1,6 @@
 using Discord;
 using Discord.WebSocket;
+using DiscordEmotes.Common.Extensions;
 using DiscordEmotes.Discord.Utility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +24,7 @@ public class DiscordStartupService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await _discord.LoginAsync(TokenType.Bot, _configuration["Discord:Token"]);
+        await _discord.LoginAsync(TokenType.Bot, _configuration.GetRequiredValue<string>("Discord:Token"));
         await _discord.StartAsync();
     }
 

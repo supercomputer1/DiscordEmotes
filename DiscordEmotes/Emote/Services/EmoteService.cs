@@ -33,12 +33,12 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
         if (emoteSearchResponse is null || !emoteSearchResponse.HasResults || emoteSearchResponse.Data.Emotes is null)
         {
             logger.LogWarning("Could not find any images for query {Query}.", query);
-            return Array.Empty<Models.Emote>(); 
+            return [];
         }
-        
+
         // get emotes
         return emoteSearchResponse.Data.Emotes.Items
             .Select(s => new Models.Emote(s.Id, s.Name))
-            .ToList(); 
+            .ToList();
     }
 }

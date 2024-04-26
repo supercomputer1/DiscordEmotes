@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using DiscordEmotes;
 using DiscordEmotes.Blabla;
+using DiscordEmotes.Common.Extensions;
 using DiscordEmotes.Discord.Services;
 using DiscordEmotes.Emote.Clients;
 using DiscordEmotes.Emote.Services;
@@ -26,22 +27,22 @@ using var host = Host.CreateDefaultBuilder(args)
     {
         services.AddHttpClient("Emotes", client =>
         {
-            client.BaseAddress = new Uri(hostContext.Configuration["7TV:BaseAddress"] ?? throw new NullReferenceException("Missing EmoteClient BaseAddress in configuration."));
+            client.BaseAddress = hostContext.Configuration.GetRequiredValue<Uri>("7TV:BaseAddress");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
 
         services.AddHttpClient("Images");
-        
+
         services.AddTransient<EmoteClient>();
         services.AddTransient<ImageClient>();
-        
-        services.AddSingleton<ImageService>(); 
-        services.AddSingleton<EmoteService>(); 
-        services.AddSingleton<RequestService>(); 
+
+        services.AddSingleton<ImageService>();
+        services.AddSingleton<EmoteService>();
+        services.AddSingleton<RequestService>();
         services.AddSingleton<DiscordSocketClient>();
         services.AddSingleton<InteractionService>();
-        services.AddHostedService<InteractionHandlingService>(); 
-        services.AddHostedService<DiscordStartupService>(); 
+        services.AddHostedService<InteractionHandlingService>();
+        services.AddHostedService<DiscordStartupService>();
     })
     .UseSerilog((hostContext, provider, loggerConfiguration) =>
     {
