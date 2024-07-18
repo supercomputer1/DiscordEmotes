@@ -40,7 +40,7 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<EmoteService>();
         services.AddSingleton<RequestService>();
         services.AddSingleton<DiscordSocketClient>();
-        services.AddSingleton<InteractionService>();
+        services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
         services.AddHostedService<InteractionHandlingService>();
         services.AddHostedService<DiscordStartupService>();
     })
