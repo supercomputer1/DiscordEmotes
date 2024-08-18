@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using System.Net;
+using Discord.Interactions;
 using Discord.WebSocket;
 using DiscordEmotes;
 using DiscordEmotes.Common;
@@ -11,11 +12,23 @@ using DiscordEmotes.Image.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using Polly.Extensions.Http;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
-// TODO: 
-// Make it possible to search for emotes.
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        //// 408, 5xx
+        .HandleTransientHttpError()
+        //// 404
+        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+        //// 401
+        .OrResult(msg => msg.StatusCode == HttpStatusCode.Unauthorized)
+        .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(1));
+}
+
 using var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration(config =>
     {
@@ -29,7 +42,7 @@ using var host = Host.CreateDefaultBuilder(args)
         {
             client.BaseAddress = hostContext.Configuration.GetRequiredValue<Uri>("7TV:BaseAddress");
             client.DefaultRequestHeaders.Add("Accept", "application/json");
-        });
+        }).AddPolicyHandler(GetRetryPolicy());
 
         services.AddHttpClient("Images");
 
@@ -55,3 +68,4 @@ using var host = Host.CreateDefaultBuilder(args)
     .Build();
 
 await host.RunAsync();
+
