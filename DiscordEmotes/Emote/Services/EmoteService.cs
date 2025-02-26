@@ -24,14 +24,15 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
 
     public async Task<IEnumerable<Models.Emote>> GetByQuery(string query, int requestLimit = 1)
     {
-        // For some reason the request sometimes does not find an emote. 
+        // NOTE: For some reason the request sometimes does not find and emote. Even with a 200 response.
         // Thus we try three times.
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
-            var emoteSearchResponse = await emoteClient.GetByQuery(query, exactMatch: true, requestLimit: requestLimit) ??
-                                      await emoteClient.GetByQuery(query, exactMatch: false, requestLimit: requestLimit);
+            var emoteSearchResponse =
+                await emoteClient.GetByQuery(query, exactMatch: true, requestLimit: requestLimit) ??
+                await emoteClient.GetByQuery(query, exactMatch: false, requestLimit: requestLimit);
 
-            if (emoteSearchResponse is not null && emoteSearchResponse.HasResults && emoteSearchResponse.Data.Emotes is not null)
+            if (emoteSearchResponse is { HasResults: true, Data.Emotes: not null })
             {
                 return emoteSearchResponse.Data.Emotes.Items
                     .Select(s => new Models.Emote(s.Id, s.Name))
@@ -40,7 +41,7 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
 
             logger.LogWarning("Could not find any images for query {Query}.", query);
 
-            await Task.Delay(500);
+            await Task.Delay(3000);
         }
 
         throw new Exception($"Could not find any emotes for query: {query}.");
