@@ -1,6 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordEmotes", "DiscordEmotes\DiscordEmotes.csproj", "{5D5AC621-96BD-43E4-A13E-97AAFB11AF4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "src\Host\Host.csproj", "{89D1761A-1E8F-4A59-9FB4-393AB2933BDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{CF316965-6003-49AB-BE6C-3D5A5267CA99}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{2AC29EE4-7541-4D0D-8B0A-7002B14EC156}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +16,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5D5AC621-96BD-43E4-A13E-97AAFB11AF4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D5AC621-96BD-43E4-A13E-97AAFB11AF4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D5AC621-96BD-43E4-A13E-97AAFB11AF4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D5AC621-96BD-43E4-A13E-97AAFB11AF4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89D1761A-1E8F-4A59-9FB4-393AB2933BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89D1761A-1E8F-4A59-9FB4-393AB2933BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89D1761A-1E8F-4A59-9FB4-393AB2933BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89D1761A-1E8F-4A59-9FB4-393AB2933BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF316965-6003-49AB-BE6C-3D5A5267CA99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF316965-6003-49AB-BE6C-3D5A5267CA99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF316965-6003-49AB-BE6C-3D5A5267CA99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF316965-6003-49AB-BE6C-3D5A5267CA99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
