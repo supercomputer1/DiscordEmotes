@@ -1,11 +1,6 @@
-global using Application.Infrastructure.Clients;
-global using Application.Infrastructure.Services;
-global using Application.Services;
-global using Discord.Interactions;
-global using Discord.WebSocket;
 global using Serilog;
 global using Serilog.Sinks.SystemConsole.Themes;
 global using Microsoft.Extensions.Configuration;
-global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
-global using Application.Common.Extensions;
+global using Application;
+global using Application.Infrastructure;
