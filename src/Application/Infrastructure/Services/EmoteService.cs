@@ -19,13 +19,13 @@ public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
         // Thus we try three times.
         for (var i = 0; i < 3; i++)
         {
-            var emoteSearchResponse =
+            var emoteSearchContract =
                 await emoteClient.GetByQuery(query, exactMatch: true, requestLimit: requestLimit) ??
                 await emoteClient.GetByQuery(query, exactMatch: false, requestLimit: requestLimit);
 
-            if (emoteSearchResponse is { HasResults: true, Data.Emotes: not null })
+            if (emoteSearchContract is { HasResults: true, Data.Emotes: not null })
             {
-                return emoteSearchResponse.Data.Emotes.Items
+                return emoteSearchContract.Data.Emotes.Items
                     .Select(s => new Domain.Models.Emote(s.Id, s.Name))
                     .ToList();
             }

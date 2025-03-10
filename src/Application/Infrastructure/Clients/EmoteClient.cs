@@ -35,9 +35,9 @@ public class EmoteClient(IHttpClientFactory httpClientFactory)
         }
 
         var responseContent = await response.Content.ReadAsStreamAsync();
-        var emoteSearchResponse = responseContent.DeserializeNotNull<Domain.Contracts.EmoteSearchContract>(jsonSerializerOptions);
+        var emoteSearchContract = responseContent.DeserializeNotNull<Domain.Contracts.EmoteSearchContract>(jsonSerializerOptions);
 
-        return emoteSearchResponse.HasResults ? emoteSearchResponse : null;
+        return emoteSearchContract.HasResults ? emoteSearchContract : null;
     }
 
     private static StringContent CreatePayload(string query, bool exactMatch, int requestLimit)
