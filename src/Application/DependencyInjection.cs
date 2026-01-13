@@ -16,5 +16,4 @@ public static class DependencyInjection
         services.AddHostedService<InteractionHandlingService>();
         services.AddHostedService<DiscordStartupService>();
     }
-    
 }
