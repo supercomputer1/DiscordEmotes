@@ -1,4 +1,5 @@
 using Application.Infrastructure.Services;
+
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
@@ -14,6 +15,9 @@ public class RequestService(ILogger<RequestService> logger, EmoteService emoteSe
         {
             case "id":
                 emotes.Add(await emoteService.GetById(query));
+                break;
+            case "ids":
+                emotes.AddRange(await emoteService.GetByIds(query.Split(",")));
                 break;
             case "query":
                 emotes.AddRange(await emoteService.GetByQuery(query, requestLimit: 1));

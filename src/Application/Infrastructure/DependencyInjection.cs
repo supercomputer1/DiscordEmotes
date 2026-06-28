@@ -17,13 +17,11 @@ public static class DependencyInjection
         }).AddStandardResilienceHandler();
 
         services.AddHttpClient("Images").AddStandardResilienceHandler();
-        
+
         services.AddTransient<EmoteClient>();
         services.AddTransient<ImageClient>();
 
         services.AddSingleton<ImageService>();
         services.AddSingleton<EmoteService>();
-        
-        
     }
 }

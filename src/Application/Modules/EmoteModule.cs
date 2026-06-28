@@ -1,5 +1,7 @@
 using Application.Services;
+
 using Discord.Interactions;
+
 using Microsoft.Extensions.Logging;
 
 namespace Application.Modules;
@@ -11,6 +13,12 @@ public class EmoteModule(ILogger<EmoteModule> logger, RequestService requestServ
     public async Task Id(string id)
     {
         await HandleRequest(id, "id");
+    }
+
+    [SlashCommand("emotes", "ids")]
+    public async Task Ids(string ids)
+    {
+        await HandleRequest(ids, "ids");
     }
 
     [SlashCommand("search", "query")]

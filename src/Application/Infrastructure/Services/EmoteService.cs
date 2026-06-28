@@ -1,10 +1,28 @@
 using Application.Infrastructure.Clients;
+
 using Microsoft.Extensions.Logging;
 
 namespace Application.Infrastructure.Services;
 
 public class EmoteService(ILogger<EmoteService> logger, EmoteClient emoteClient)
 {
+    public async Task<IEnumerable<Domain.Models.Emote>> GetByIds(IEnumerable<string> ids)
+    {
+        if (ids.Count() > 10)
+        {
+            throw new NotSupportedException("Discord does not support more than 10 images.");
+        }
+
+        List<Domain.Models.Emote> result = [];
+        foreach (var id in ids)
+        {
+            var emote = await GetById(id);
+            result.Add(emote);
+        }
+
+        return result;
+    }
+
     public async Task<Domain.Models.Emote> GetById(string id)
     {
         var emoteResponse = await emoteClient.GetById(id);
